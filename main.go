@@ -26,9 +26,10 @@ func main() {
 	userHandler := handler.NewUserHandler(userService)	
 	
 	router := gin.Default()
-	api_v1 := router.Group("/api/v1", userHandler.RegisterUser)
+	api_v1 := router.Group("/api/v1")
 	
-	api_v1.POST("/users")
+	api_v1.POST("/users", userHandler.RegisterUser)
+	api_v1.POST("/sessions", userHandler.Login)
 	
 	router.Run(":5000")
 	
