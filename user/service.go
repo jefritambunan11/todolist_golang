@@ -9,6 +9,7 @@ import(
 type Service interface {
 	RegisterUser(input RegisterUserInput) (User, error)
 	Login(input LoginInput) (User, error)
+	IsEmailAvailable(input CheckEmailInput) (bool, error)
 }
 
 type service struct {
@@ -46,19 +47,25 @@ func (s *service) Login(input LoginInput)(User, error) {
 	password := input.Password
 
 	user, err := s.repository.FindByEmail(email)
-	if err != nil {
-		return user, err
-	}
+	if err != nil { return user, err }
 
-	if user.ID == 0 {
-		return user, errors.New("User Not Found")
-	}
+	if user.ID == 0 { return user, errors.New("User Not Found")	}
 
 	_err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password)) 
 	if _err != nil {
 	//	return user, _err
 		return user, errors.New("Wrong Password")
 	}
-
 	return user, nil
+}
+
+func (s *service) IsEmailAvailable(input CheckEmailInput) (bool, error) {
+	email := input.Email 
+
+	user, err := s.repository.FindByEmail(email)
+	if err != nil { return false, err }
+
+	if user.ID == 0 { return true, nil }
+	
+	return false, nil
 }

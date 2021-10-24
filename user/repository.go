@@ -6,7 +6,7 @@ import (
 
 type Repository interface {
 	Save(user User) (User, error)
-	FindByEmail(email string) (User, error)
+	FindByEmail(email string) (User, error)	
 }
 
 type repository struct {

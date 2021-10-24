@@ -40,7 +40,6 @@ func (h *userHandler) RegisterUser(c *gin.Context) {
 	formatResponse := user.FormatUser(newUser, "tokentokentokentokentoken")
 	response := helper.APIResponse("Account has been registered", http.StatusOK, "success", formatResponse)
 	c.JSON(http.StatusOK, response)
-
 }
 
 func (h *userHandler) Login(c *gin.Context) {
@@ -50,7 +49,7 @@ func (h *userHandler) Login(c *gin.Context) {
 	if err != nil {
 		errors := helper.FormatValidationError(err)	
 		errorMessage := gin.H{"errors": errors}
-		response := helper.APIResponse("Login failed", http.StatusBadRequest, "error", errorMessage)
+		response := helper.APIResponse("Login Failed", http.StatusBadRequest, "error", errorMessage)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	} 
@@ -58,13 +57,47 @@ func (h *userHandler) Login(c *gin.Context) {
 	LoginUser, err := h.userService.Login(input)
 	if err != nil {
 		errorMessage := gin.H{"errors": err.Error()}
-		response := helper.APIResponse("Login failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		response := helper.APIResponse("Login Failed", http.StatusUnprocessableEntity, "error", errorMessage)
 		c.JSON(http.StatusUnprocessableEntity, response) 
 		return	 	
 	}
 
 	formatResponse := user.FormatUser(LoginUser, "tokentokentokentokentoken")
-	response := helper.APIResponse("User successfully Loggedin", http.StatusOK, "success", formatResponse)
+	response := helper.APIResponse("User Successfully Loggedin", http.StatusOK, "success", formatResponse)
 	c.JSON(http.StatusOK, response)
+}
 
+func (h *userHandler) CheckEmailAvailability(c *gin.Context) {
+	// ada input email dari user (buat struct buat email input)
+	// input email di mapping ke struct input
+	// struct input dipassing ke service
+	// service akan manggil repository - email sudah ada tau belum
+	// repository - db
+
+	var input user.CheckEmailInput 
+
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError(err)	
+		errorMessage := gin.H{"errors": errors}
+		response := helper.APIResponse("Email Checking Is Failed", http.StatusBadRequest, "error", errorMessage)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	} 
+
+	isEmailAvaiable, err := h.userService.IsEmailAvailable(input)
+	if err != nil {
+		errorMessage := gin.H{"errors": "Server Error"}
+		response := helper.APIResponse("Email Checking Is Failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response) 
+		return	 	
+	}
+
+	data := gin.H{ "is_available": isEmailAvaiable }
+
+	var metaMessage string = "Email Is Available"
+	if !isEmailAvaiable { metaMessage = "Email Has Been Taken" }
+
+	response := helper.APIResponse(metaMessage, http.StatusOK, "success", data)
+	c.JSON(http.StatusOK, response)
 }
