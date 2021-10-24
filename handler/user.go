@@ -7,7 +7,7 @@ import(
 	"github.com/gin-gonic/gin"
 	
 	"net/http"
-	// "fmt"
+	"fmt"
 )
 
 type userHandler struct {
@@ -24,7 +24,7 @@ func (h *userHandler) RegisterUser(c *gin.Context) {
 	err := c.ShouldBindJSON(&input)
 	if err != nil {				
 		errors := helper.FormatValidationError(err)	
-		errorMessage := gin.H{"errors": errors}
+		errorMessage := gin.H{ "errors": errors }
 		response := helper.APIResponse("Register account failed", http.StatusBadRequest, "error", errorMessage)
 		c.JSON(http.StatusBadRequest, response)
 		return
@@ -48,7 +48,7 @@ func (h *userHandler) Login(c *gin.Context) {
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
 		errors := helper.FormatValidationError(err)	
-		errorMessage := gin.H{"errors": errors}
+		errorMessage := gin.H{ "errors": errors }
 		response := helper.APIResponse("Login Failed", http.StatusBadRequest, "error", errorMessage)
 		c.JSON(http.StatusBadRequest, response)
 		return
@@ -56,7 +56,7 @@ func (h *userHandler) Login(c *gin.Context) {
 
 	LoginUser, err := h.userService.Login(input)
 	if err != nil {
-		errorMessage := gin.H{"errors": err.Error()}
+		errorMessage := gin.H{ "errors": err.Error() }
 		response := helper.APIResponse("Login Failed", http.StatusUnprocessableEntity, "error", errorMessage)
 		c.JSON(http.StatusUnprocessableEntity, response) 
 		return	 	
@@ -67,19 +67,13 @@ func (h *userHandler) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func (h *userHandler) CheckEmailAvailability(c *gin.Context) {
-	// ada input email dari user (buat struct buat email input)
-	// input email di mapping ke struct input
-	// struct input dipassing ke service
-	// service akan manggil repository - email sudah ada tau belum
-	// repository - db
-
+func (h *userHandler) CheckEmailAvailability(c *gin.Context) {	
 	var input user.CheckEmailInput 
 
 	err := c.ShouldBindJSON(&input)
 	if err != nil {
 		errors := helper.FormatValidationError(err)	
-		errorMessage := gin.H{"errors": errors}
+		errorMessage := gin.H{ "errors": errors }
 		response := helper.APIResponse("Email Checking Is Failed", http.StatusBadRequest, "error", errorMessage)
 		c.JSON(http.StatusBadRequest, response)
 		return
@@ -87,7 +81,7 @@ func (h *userHandler) CheckEmailAvailability(c *gin.Context) {
 
 	isEmailAvaiable, err := h.userService.IsEmailAvailable(input)
 	if err != nil {
-		errorMessage := gin.H{"errors": "Server Error"}
+		errorMessage := gin.H{ "errors": "Server Error" }
 		response := helper.APIResponse("Email Checking Is Failed", http.StatusUnprocessableEntity, "error", errorMessage)
 		c.JSON(http.StatusUnprocessableEntity, response) 
 		return	 	
@@ -99,5 +93,40 @@ func (h *userHandler) CheckEmailAvailability(c *gin.Context) {
 	if !isEmailAvaiable { metaMessage = "Email Has Been Taken" }
 
 	response := helper.APIResponse(metaMessage, http.StatusOK, "success", data)
+	c.JSON(http.StatusOK, response)
+}
+
+
+func (h *userHandler) UploadAvatar(c *gin.Context) {
+	file, err := c.FormFile("avatar")
+	if err != nil {
+		data := gin.H{ "is_uploaded": false }
+		response := helper.APIResponse("Failed To Upload Avatar Image", http.StatusBadRequest, "error", data)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	userID := 1
+	path := fmt.Sprintf("images/%d-%s", userID, file.Filename)
+	//path := "images/" + file.Filename
+
+	err = c.SaveUploadedFile(file, path)
+	if err != nil {
+		data := gin.H{ "is_uploaded": false }
+		response := helper.APIResponse("Failed To Upload Avatar Image", http.StatusBadRequest, "error", data)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	
+	_, err = h.userService.SaveAvatar(userID, path)
+	if err != nil {
+		data := gin.H{ "is_uploaded": false }
+		response := helper.APIResponse("Failed To Upload Avatar Image", http.StatusBadRequest, "error", data)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	data := gin.H{ "is_uploaded": true }
+	response := helper.APIResponse("Avatar Successfuly Uploaded", http.StatusOK, "success", data)
 	c.JSON(http.StatusOK, response)
 }
