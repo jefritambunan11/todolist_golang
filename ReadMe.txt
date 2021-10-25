@@ -12,3 +12,6 @@ go get -u gorm.io/driver/mysql
 
 5. Install Validator
 go get -u github.com/go-playground/validator/v10
+
+6. Install JWT
+go get -u github.com/dgrijalva/jwt-go
