@@ -2,6 +2,8 @@ package main
 
 import(
 	"bwastartup/user"
+	"bwastartup/campaign"
+
 	"bwastartup/handler"
 	"bwastartup/auth"
 	"bwastartup/helper"
@@ -11,7 +13,7 @@ import(
 	"gorm.io/gorm"
 	"github.com/dgrijalva/jwt-go"
 	
-	// "fmt"
+	"fmt"
 	"log"
 	"strings"
 	"net/http"
@@ -26,6 +28,7 @@ func main() {
 	}
 	
 	userRepository := user.NewRepository(db) 
+	campaignRepository := campaign.NewRepository(db) 
 	userService := user.NewService(userRepository) 
 	authService := auth.NewService() 
 	userHandler := handler.NewUserHandler(userService, authService)	
