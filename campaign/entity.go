@@ -2,6 +2,7 @@ package campaign
 
 import (
 	"time"
+	"bwastartup/user"
 )
 
 type Campaign struct {
@@ -13,13 +14,15 @@ type Campaign struct {
 	Perks string 
 	BackerCount int 
 	GoalAmount int
-	CurrenctAmount int 
+	CurrentAmount int 
 	Slug string
 	CreatedAt time.Time  
 	UpdatedAt time.Time  
 
 	// Relasi Struct 
 	CampaignImages []CampaignImage
+
+	User user.User
 }
 
 type CampaignImage struct {
