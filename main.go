@@ -13,7 +13,7 @@ import(
 	"gorm.io/gorm"
 	"github.com/dgrijalva/jwt-go"
 	
-	// "fmt"
+	//"fmt"
 	"log"
 	"strings"
 	"net/http"
@@ -33,11 +33,18 @@ func main() {
 	userService := user.NewService(userRepository) 
 	campaignService := campaign.NewService(campaignRepository) 
 	authService := auth.NewService() 
+
+	
+
 		
 	userHandler := handler.NewUserHandler(userService, authService)	
 	campaignHandler := handler.NewCampaignHandler(campaignService)	
+
+
+
 	
 	router := gin.Default()
+	router.Static("/images", "./images")
 	api_v1 := router.Group("/api/v1")
 	
 	api_v1.POST("/users", userHandler.RegisterUser)
@@ -48,6 +55,7 @@ func main() {
 
 	api_v1.GET("/campaigns", campaignHandler.GetCampaigns)	
 	api_v1.GET("/campaigns/:id", campaignHandler.GetCampaign)	
+	api_v1.POST("/campaigns", authMiddleware(authService, userService), campaignHandler.CreateCampaign)	
 		
 
 

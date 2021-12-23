@@ -15,3 +15,6 @@ go get -u github.com/go-playground/validator/v10
 
 6. Install JWT
 go get -u github.com/dgrijalva/jwt-go
+
+7. Install Slug
+go get -u github.com/gosimple/slug
