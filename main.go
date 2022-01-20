@@ -33,9 +33,6 @@ func main() {
 	userService := user.NewService(userRepository) 
 	campaignService := campaign.NewService(campaignRepository) 
 	authService := auth.NewService() 
-
-	
-
 		
 	userHandler := handler.NewUserHandler(userService, authService)	
 	campaignHandler := handler.NewCampaignHandler(campaignService)	
@@ -56,6 +53,7 @@ func main() {
 	api_v1.GET("/campaigns", campaignHandler.GetCampaigns)	
 	api_v1.GET("/campaigns/:id", campaignHandler.GetCampaign)	
 	api_v1.POST("/campaigns", authMiddleware(authService, userService), campaignHandler.CreateCampaign)	
+	api_v1.PUT("/campaigns/:id", authMiddleware(authService, userService), campaignHandler.UpdateCampaign)	
 		
 
 
