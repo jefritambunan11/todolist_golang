@@ -149,6 +149,9 @@ func (h *campaignHandler) UploadImage(c *gin.Context) {
 	// Ambil ID dari middleware c.Set
 	currentUser := c.MustGet("currentUser").(user.User)
 
+	// set ke user arr di stryut CreateCampaignImageInput
+	input.User = currentUser
+
 	userID := currentUser.ID
 	path := fmt.Sprintf("images/%d-%s", userID, file.Filename)
 
