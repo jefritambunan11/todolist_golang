@@ -1,15 +1,14 @@
 package main
 
 import (
-	"bwastartup/auth"
-	"bwastartup/campaign"
-	"bwastartup/handler"
-	"bwastartup/helper"
-	"bwastartup/transaction"
-	"bwastartup/user"
 	"log"
 	"net/http"
 	"strings"
+	"todolist/auth"
+	"todolist/handler"
+	"todolist/helper"
+	"todolist/todo"
+	"todolist/user"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -18,8 +17,7 @@ import (
 )
 
 func main() {
-	// Database Setup
-	dsn := "root:@tcp(127.0.0.1:3306)/bwastartup?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "root:@tcp(127.0.0.1:3306)/todolist?charset=utf8mb4&parseTime=True&loc=Asia%2FJakarta&charset=utf8mb4&collation=utf8mb4_unicode_ci"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
 	if err != nil {
@@ -35,27 +33,20 @@ func main() {
 	userService := user.NewService(userRepository)
 	userHandler := handler.NewUserHandler(userService, authService)
 
-	api_v1 := router.Group("/api/v1")
-	api_v1.POST("/users", userHandler.RegisterUser)
-	api_v1.POST("/sessions", userHandler.Login)
-	api_v1.POST("/email_checkers", userHandler.CheckEmailAvailability)
-	api_v1.POST("/avatars", authMiddleware(authService, userService), userHandler.UploadAvatar)
+	api := router.Group("/api")
+	api.POST("/users", userHandler.RegisterUser)
+	api.POST("/sessions", userHandler.Login)
+	api.POST("/email_checkers", userHandler.CheckEmailAvailability)
 
-	campaignRepository := campaign.NewRepository(db)
-	campaignService := campaign.NewService(campaignRepository)
-	campaignHandler := handler.NewCampaignHandler(campaignService)
+	todoRepository := todo.NewRepository(db)
+	todoService := todo.NewService(todoRepository)
+	todoHandler := handler.NewTodoHandler(todoService, authService)
 
-	api_v1.GET("/campaigns", campaignHandler.GetCampaigns)
-	api_v1.GET("/campaigns/:id", campaignHandler.GetCampaign)
-	api_v1.POST("/campaigns", authMiddleware(authService, userService), campaignHandler.CreateCampaign)
-	api_v1.PUT("/campaigns/:id", authMiddleware(authService, userService), campaignHandler.UpdateCampaign)
-	api_v1.POST("/campaign-images", authMiddleware(authService, userService), campaignHandler.UploadImage)
-
-	transactionRepository := transaction.NewRepository(db)
-	transactionService := transaction.NewService(transactionRepository, campaignRepository)
-	transactionHandler := handler.NewTransactionHandler(transactionService)
-
-	api_v1.GET("/campaigns/:id/transactions", authMiddleware(authService, userService), transactionHandler.GetCampaignTransactions)
+	api.GET("/todo_list", todoHandler.GetTodos)
+	api.GET("/todo_list/:id", todoHandler.GetTodo)
+	api.POST("/todo", authMiddleware(authService, userService), todoHandler.CreateTodo)
+	api.PUT("/todo/:id", authMiddleware(authService, userService), todoHandler.UpdateTodo)
+	api.DELETE("/todo/:id", authMiddleware(authService, userService), todoHandler.DeleteTodo)
 
 	router.Run(":8080")
 
@@ -67,7 +58,7 @@ func authMiddleware(authService auth.Service, userService user.Service) gin.Hand
 		authHeader := c.GetHeader("Authorization")
 
 		if !strings.Contains(authHeader, "Bearer") {
-			response := helper.APIResponse("Unauthorized", http.StatusUnauthorized, "error", nil)
+			response := helper.APIResponse("Has Given Wrong Bearer Token ", http.StatusUnauthorized, "error", nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
 		}
@@ -104,7 +95,7 @@ func authMiddleware(authService auth.Service, userService user.Service) gin.Hand
 			return
 		}
 
-		c.Set("currentUser", user)
+		c.Set("userAktif", user)
 	}
 
 }

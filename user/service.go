@@ -11,7 +11,6 @@ type Service interface {
 	Login(input LoginInput) (User, error)
 	IsEmailAvailable(input CheckEmailInput) (bool, error)
 	GetUserByID(id int) (User, error)
-	SaveAvatar(id int, fileLocation string) (User, error)
 }
 
 type service struct {
@@ -26,15 +25,13 @@ func (s *service) RegisterUser(input RegisterUserInput) (User, error) {
 	var user User
 	user.Name = input.Name
 	user.Email = input.Email
-	user.Occupation = input.Occupation
 
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
 	if err != nil {
 		return user, err
 	}
 
-	user.PasswordHash = string(passwordHash)
-	user.Role = "user"
+	user.Password = string(passwordHash)
 
 	newUser, err := s.repository.Save(user)
 	if err != nil {
@@ -54,12 +51,12 @@ func (s *service) Login(input LoginInput) (User, error) {
 	}
 
 	if user.ID == 0 {
-		return user, errors.New("User Not Found")
+		return user, errors.New("User Tidak Ditemukan")
 	}
 
-	_err_ := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
+	_err_ := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if _err_ != nil {
-		return user, errors.New("Wrong Password")
+		return user, errors.New("Password Salah")
 	}
 
 	return user, nil
@@ -86,23 +83,7 @@ func (s *service) GetUserByID(id int) (User, error) {
 		return user, err
 	}
 	if user.ID == 0 {
-		return user, errors.New("No User Found With That ID")
+		return user, errors.New("Tidak Ada User Menggunakan ID Tersebut")
 	}
 	return user, nil
-}
-
-func (s *service) SaveAvatar(id int, fileLocation string) (User, error) {
-	user, err := s.repository.FindByID(id)
-	if err != nil {
-		return user, err
-	}
-
-	user.AvatarFileName = fileLocation
-
-	_user_, err := s.repository.Update(user)
-	if err != nil {
-		return _user_, err
-	}
-
-	return _user_, nil
 }

@@ -7,22 +7,23 @@ import (
 )
 
 type Service interface {
-	GenerateToken(userID int) (string, error)
+	GenerateToken(userID int, userName string, userPassword string) (string, error)
 	ValidateToken(encodedToken string) (*jwt.Token, error)
 }
 
-type jwtService struct {
-}
+type jwtService struct{}
 
 func NewService() *jwtService {
 	return &jwtService{}
 }
 
-var SECRET_KEY = []byte("BWASTARTUP_s3cr3T_k3Y")
+var SECRET_KEY = []byte("TODOLIST_Tl11dTQW")
 
-func (s *jwtService) GenerateToken(userID int) (string, error) {
+func (s *jwtService) GenerateToken(userID int, userName string, userPassword string) (string, error) {
 	claim := jwt.MapClaims{}
 	claim["user_id"] = userID
+	claim["user_name"] = userName
+	claim["user_password"] = userPassword
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
 
@@ -38,7 +39,7 @@ func (s *jwtService) ValidateToken(encodedToken string) (*jwt.Token, error) {
 	token, err := jwt.Parse(encodedToken, func(token *jwt.Token) (interface{}, error) {
 		_, ok := token.Method.(*jwt.SigningMethodHMAC)
 		if !ok {
-			return nil, errors.New("Invalid Token")
+			return nil, errors.New("token tidak lazim")
 		}
 		return []byte(SECRET_KEY), nil
 	})
