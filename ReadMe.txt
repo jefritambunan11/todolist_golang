@@ -1,3 +1,3 @@
-Backend Service Aplikasi Todo List, Sebagai Portfolio Saya
+Backend Service Aplikasi Todo List, Sebagai Portfolio Sederhana
 
 Jefri Tambunan
