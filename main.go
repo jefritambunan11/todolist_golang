@@ -58,14 +58,13 @@ func authMiddleware(authService auth.Service, userService user.Service) gin.Hand
 		authHeader := c.GetHeader("Authorization")
 
 		if !strings.Contains(authHeader, "Bearer") {
-			response := helper.APIResponse("Has Given Wrong Bearer Token ", http.StatusUnauthorized, "error", nil)
+			response := helper.APIResponse("Bentuk Token Salah ", http.StatusUnauthorized, "error", nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
 		}
 
 		var tokenString string
 
-		// convert Bearer token ke array
 		arrayToken := strings.Split(authHeader, " ")
 		if len(arrayToken) == 2 {
 			tokenString = arrayToken[1]
@@ -73,7 +72,7 @@ func authMiddleware(authService auth.Service, userService user.Service) gin.Hand
 
 		_token_, err := authService.ValidateToken(tokenString)
 		if err != nil {
-			response := helper.APIResponse("Unauthorized", http.StatusUnauthorized, "error", nil)
+			response := helper.APIResponse("Token Tidak Valid", http.StatusUnauthorized, "error", nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
 		}
@@ -81,7 +80,7 @@ func authMiddleware(authService auth.Service, userService user.Service) gin.Hand
 		claim, ok := _token_.Claims.(jwt.MapClaims)
 
 		if !ok || !_token_.Valid {
-			response := helper.APIResponse("Unauthorized", http.StatusUnauthorized, "error", nil)
+			response := helper.APIResponse("Token Tidak Valid", http.StatusUnauthorized, "error", nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
 		}
@@ -90,7 +89,7 @@ func authMiddleware(authService auth.Service, userService user.Service) gin.Hand
 
 		user, err := userService.GetUserByID(userID)
 		if err != nil {
-			response := helper.APIResponse("Unauthorized", http.StatusUnauthorized, "error", nil)
+			response := helper.APIResponse("ID User Tidak Ditemukan", http.StatusUnauthorized, "error", nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
 		}

@@ -74,7 +74,6 @@ func (s *service) UpdateTodo(inputID GetTodoDetailInput, inputData CreateTodoInp
 		return todo, errors.New("todo nya bukan milik si user")
 	}
 
-	// user_id ambil dari middleware
 	todo.UserID = inputData.User.ID
 
 	todo.Todo = inputData.Todo

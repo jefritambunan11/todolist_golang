@@ -73,10 +73,6 @@ func (h *userHandler) Login(c *gin.Context) {
 		return
 	}
 
-	// formatResponse := user.FormatUser(LoginUser, "tokentoken")
-	// response := helper.APIResponse("User Successfully Loggedin", http.StatusOK, "sukses", formatResponse)
-	// c.JSON(http.StatusOK, response)
-
 	token, err := h.authService.GenerateToken(LoginUser.ID, LoginUser.Name, LoginUser.Password)
 	if err != nil {
 		errorMessage := gin.H{"errors": err.Error()}
