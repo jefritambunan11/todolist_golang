@@ -1,6 +1,6 @@
 Backend Service Aplikasi Todo List, Sebagai Portfolio Sederhana
 
-Jefri Tambunan
+Author : Jefri Tambunan
 
 ###################
 User API - Register
