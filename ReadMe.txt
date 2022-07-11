@@ -71,7 +71,7 @@ Method: POST
 
 localhost:8080/api/todo
 
-set Bearer Token - Token Dapat Ketika Login Berhasil
+set Bearer Token - Token Didapat Ketika Login Berhasil
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJKZWZyaSIsInVzZXJfcGFzc3dvcmQiOiIkMmEkMDQkWUIzOWtUZ2VFUnFEcXpNWEs0YVpLZWhKVnlEemF1QXBzdHF5L1hQajl0dzBPeDcuWDVPVEMifQ.dDiBcMl3iaAQJ9jBpJPvZagmAFlEb9UAdAyBJtpfqXM
 
 
@@ -90,7 +90,7 @@ Method: PUT
 
 localhost:8080/api/todo/1
 
-set Bearer Token - Token Dapat Ketika Login Berhasil
+set Bearer Token - Token Didapat Ketika Login Berhasil
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJKZWZyaSIsInVzZXJfcGFzc3dvcmQiOiIkMmEkMDQkWUIzOWtUZ2VFUnFEcXpNWEs0YVpLZWhKVnlEemF1QXBzdHF5L1hQajl0dzBPeDcuWDVPVEMifQ.dDiBcMl3iaAQJ9jBpJPvZagmAFlEb9UAdAyBJtpfqXM
 
 
@@ -110,6 +110,6 @@ Method: DELETE
 
 localhost:8080/api/todo/1
 
-set Bearer Token - Token Dapat Ketika Login Berhasil
+set Bearer Token - Token Didapat Ketika Login Berhasil
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJKZWZyaSIsInVzZXJfcGFzc3dvcmQiOiIkMmEkMDQkWUIzOWtUZ2VFUnFEcXpNWEs0YVpLZWhKVnlEemF1QXBzdHF5L1hQajl0dzBPeDcuWDVPVEMifQ.dDiBcMl3iaAQJ9jBpJPvZagmAFlEb9UAdAyBJtpfqXM
 
