@@ -6,7 +6,7 @@ import (
 )
 
 type Service interface {
-	GetTodos(userID int) ([]Todo, error)
+	GetTodos(userID int, _page_number_ int) ([]Todo, error)
 	GetTodoByID(input GetTodoDetailInput) (Todo, error)
 	CreateTodo(input CreateTodoInput) (Todo, error)
 	UpdateTodo(inputID GetTodoDetailInput, inputData CreateTodoInput) (Todo, error)
@@ -21,7 +21,7 @@ func NewService(repository Repository) *service {
 	return &service{repository}
 }
 
-func (s *service) GetTodos(userID int) ([]Todo, error) {
+func (s *service) GetTodos(userID int, _page_number_ int) ([]Todo, error) {
 	
 	if userID != 0 {
 		var todos, err = s.repository.FindByUserID(userID)
@@ -34,7 +34,7 @@ func (s *service) GetTodos(userID int) ([]Todo, error) {
 	}
 	
 	
-	var todos, err = s.repository.FindAll()
+	var todos, err = s.repository.FindAll(_page_number_)
 	if err != nil {
 		return todos, err
 	}

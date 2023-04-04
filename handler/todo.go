@@ -27,9 +27,11 @@ func NewTodoHandler(todoService todo.Service, authService auth.Service) *todoHan
 
 func (h *todoHandler) GetTodos(c *gin.Context) {
 	
-	var userID, _ = strconv.Atoi(c.Query("user_id"))	
+	var userID, _ = strconv.Atoi(c.Query("user_id"))
+
+	var _page_number_, _ = strconv.Atoi(c.Query("page"))
 	
-	var todos, err = h.todoService.GetTodos(userID)
+	var todos, err = h.todoService.GetTodos(userID, _page_number_)
 	if err != nil {
 		var _output_ = helper.APIResponse("Gagal Mengambil Data Todos", http.StatusBadRequest, "error", err)
 		c.JSON(http.StatusBadRequest, _output_)
@@ -58,12 +60,6 @@ func (h *todoHandler) GetTodo(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, _output_)
 		return
 	}
-
-	// var final interface{}
-
-	// if todoDetail.ID == 0 {
-	// 	final = make(map[string]string)
-	// }
 
 	var _output_ = helper.APIResponse("Todo detail", http.StatusOK, "sukses", todo.FormatTodoDetail(todoDetail))
 	c.JSON(http.StatusOK, _output_)

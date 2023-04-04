@@ -5,7 +5,7 @@ import (
 )
 
 type Repository interface {
-	FindAll() ([]Todo, error)
+	FindAll(_page_number_ int) ([]Todo, error)
 	FindByUserID(UserID int) ([]Todo, error)
 	FindByID(ID int) (Todo, error)
 	Save(todo Todo) (Todo, error)
@@ -21,14 +21,24 @@ func NewRepository(db *gorm.DB) *repository {
 	return &repository{db}
 }
 
-func (r *repository) FindAll() ([]Todo, error) {
+func (r *repository) FindAll(_page_number_ int) ([]Todo, error) {
 	
 	var todos []Todo	
-	
-	var err = r.db.Find(&todos).Error
-	if err != nil {
-		return todos, err
-	}
+
+	if _page_number_ > 0 {
+		var page = _page_number_
+		var pageSize = 5
+		var offset = (page - 1) * pageSize
+		var err = r.db.Offset(offset).Limit(pageSize).Find(&todos).Error
+		if err != nil {
+			return todos, err
+		}
+	}else{
+		var err = r.db.Find(&todos).Error
+		if err != nil {
+			return todos, err
+		}
+	}	
 	
 	return todos, nil
 }
