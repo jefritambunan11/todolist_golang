@@ -21,12 +21,6 @@ var SECRET_KEY = []byte("Tfn#@j0lMq2vHte%*&")
 
 func (s *jwtService) GenerateToken(userID int, userName string, userPassword string) (string, error) {
 	
-	
-	
-	
-	
-
-	
 	var claim = jwt.MapClaims{}
 	claim["user_id"] = userID
 	claim["user_name"] = userName
@@ -40,10 +34,10 @@ func (s *jwtService) GenerateToken(userID int, userName string, userPassword str
 	if err != nil {
 		return signedToken, err
 	}
-
 	
 	return signedToken, nil
 }
+
 
 func (s *jwtService) ValidateToken(encodedToken string) (*jwt.Token, error) {
 	

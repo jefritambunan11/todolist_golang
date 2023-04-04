@@ -49,7 +49,6 @@ func (s *service) GetTodoByID(input GetTodoDetailInput) (Todo, error) {
 	if err != nil {
 		return todo, err
 	}
-
 	
 	return todo, nil
 }

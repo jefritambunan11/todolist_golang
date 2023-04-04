@@ -32,7 +32,7 @@ func FormatTodo(todo Todo) TodoFormatter {
 func FormatTodoDetail(todo Todo) TodoFormatter {
 	
 	var todoFormatter = TodoFormatter{}	
-	
+
 	todoFormatter.ID = todo.ID
 	todoFormatter.UserID = todo.UserID
 	todoFormatter.Todo = todo.Todo
@@ -43,7 +43,7 @@ func FormatTodoDetail(todo Todo) TodoFormatter {
 	
 	todoFormatter.User = todoUserFormatter
 	
-	return todoFormatter
+	return todoFormatter	
 }
 
 func FormatTodos(todos []Todo) []TodoFormatter {

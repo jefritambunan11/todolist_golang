@@ -31,7 +31,7 @@ func main()  {
 	var userHandler = handler.NewUserHandler(userService, authService)
 
 	
-	var api = router.Group("/api")
+	var api = router.Group("/api") 
 	
 
 	

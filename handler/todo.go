@@ -19,7 +19,7 @@ type todoHandler struct {
 }
 
 func NewTodoHandler(todoService todo.Service, authService auth.Service) *todoHandler {
-	return &todoHandler{
+	return &todoHandler {
 		todoService,
 		authService,
 	}
@@ -27,20 +27,17 @@ func NewTodoHandler(todoService todo.Service, authService auth.Service) *todoHan
 
 func (h *todoHandler) GetTodos(c *gin.Context) {
 	
-	userID, _ := strconv.Atoi(c.Query("user_id"))
+	var userID, _ = strconv.Atoi(c.Query("user_id"))	
 	
-	
-	todos, err := h.todoService.GetTodos(userID)
+	var todos, err = h.todoService.GetTodos(userID)
 	if err != nil {
-		response := helper.APIResponse("Gagal Mengambil Data Todos", http.StatusBadRequest, "error", err)
-		c.JSON(http.StatusBadRequest, response)
+		var _output_ = helper.APIResponse("Gagal Mengambil Data Todos", http.StatusBadRequest, "error", err)
+		c.JSON(http.StatusBadRequest, _output_)
 		return
 	}
-	
-	
-	response := helper.APIResponse("Daftar Todos", http.StatusOK, "sukses", todo.FormatTodos(todos))
-	c.JSON(http.StatusOK, response)
 
+	var _output_ = helper.APIResponse("Daftar Todos", http.StatusOK, "sukses", todo.FormatTodos(todos))
+	c.JSON(http.StatusOK, _output_)
 }
 
 func (h *todoHandler) GetTodo(c *gin.Context) {
@@ -61,6 +58,12 @@ func (h *todoHandler) GetTodo(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, _output_)
 		return
 	}
+
+	// var final interface{}
+
+	// if todoDetail.ID == 0 {
+	// 	final = make(map[string]string)
+	// }
 
 	var _output_ = helper.APIResponse("Todo detail", http.StatusOK, "sukses", todo.FormatTodoDetail(todoDetail))
 	c.JSON(http.StatusOK, _output_)
@@ -138,7 +141,7 @@ func (h *todoHandler) DeleteTodo(c *gin.Context) {
 	
 	var err = c.ShouldBindUri(&inputID)
 	if err != nil {
-		var _output_ = helper.APIResponse("Gagak Mengkaitkan Ke URI", http.StatusBadRequest, "error", nil)
+		var _output_ = helper.APIResponse("Gagal Mengkaitkan Ke URI", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, _output_)
 		return
 	}
