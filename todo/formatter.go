@@ -18,37 +18,42 @@ type TodoUserFormatter struct {
 }
 
 func FormatTodo(todo Todo) TodoFormatter {
-	todoFormatter := TodoFormatter{}
+	
+	var todoFormatter = TodoFormatter{}
+	
 	todoFormatter.ID = todo.ID
 	todoFormatter.Todo = todo.Todo
 	todoFormatter.DateTime = todo.DateTime
-	todoFormatter.UserID = todo.UserID
-
+	todoFormatter.UserID = todo.UserID	
+	
 	return todoFormatter
 }
 
 func FormatTodoDetail(todo Todo) TodoFormatter {
-	t := TodoFormatter{}
-	t.ID = todo.ID
-	t.UserID = todo.UserID
-	t.Todo = todo.Todo
-	t.DateTime = todo.DateTime
-
-	todoUserFormatter := TodoUserFormatter{}
+	
+	var todoFormatter = TodoFormatter{}	
+	
+	todoFormatter.ID = todo.ID
+	todoFormatter.UserID = todo.UserID
+	todoFormatter.Todo = todo.Todo
+	todoFormatter.DateTime = todo.DateTime
+	
+	var todoUserFormatter = TodoUserFormatter{}
 	todoUserFormatter.ID = todo.User.ID
-
-	t.User = todoUserFormatter
-
-	return t
+	
+	todoFormatter.User = todoUserFormatter
+	
+	return todoFormatter
 }
 
 func FormatTodos(todos []Todo) []TodoFormatter {
+	
 	if len(todos) == 0 {
 		return []TodoFormatter{}
 	}
-
+	
 	var todosFormatter []TodoFormatter
-
+	
 	for _, todo := range todos {
 		todoFormatter := FormatTodo(todo)
 		todosFormatter = append(todosFormatter, todoFormatter)

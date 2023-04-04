@@ -25,94 +25,95 @@ func NewUserHandler(userService user.Service, authService auth.Service) *userHan
 func (h *userHandler) RegisterUser(c *gin.Context) {
 	var input user.RegisterUserInput
 
-	err := c.ShouldBindJSON(&input)
+	var err = c.ShouldBindJSON(&input)
 	if err != nil {
-		errors := helper.FormatValidationError(err)
-		errorMessage := gin.H{"errors": errors}
-		response := helper.APIResponse("Gagal Mengkaitkan ke JSON", http.StatusBadRequest, "error", errorMessage)
-		c.JSON(http.StatusBadRequest, response)
+		var errors = helper.FormatValidationError(err)
+		var errorMessage = gin.H{"errors": errors}
+		var _output_ = helper.APIResponse("Gagal Mengkaitkan ke JSON", http.StatusBadRequest, "error", errorMessage)
+		c.JSON(http.StatusBadRequest, _output_)
 		return
 	}
 
-	newUser, err := h.userService.RegisterUser(input)
-	if err != nil {
-		response := helper.APIResponse("Transaksi Database Gagal", http.StatusBadRequest, "error", nil)
-		c.JSON(http.StatusBadRequest, response)
+	var newUser, err2 = h.userService.RegisterUser(input)
+	if err2 != nil {
+		var _output_ = helper.APIResponse("Transaksi Database Gagal", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, _output_)
 		return
 	}
 
-	token, err := h.authService.GenerateToken(newUser.ID, newUser.Name, newUser.Password)
-	if err != nil {
-		response := helper.APIResponse("Gagal Menghasilkan Token", http.StatusBadRequest, "error", nil)
-		c.JSON(http.StatusBadRequest, response)
+	var token, err3 = h.authService.GenerateToken(newUser.ID, newUser.Name, newUser.Password)
+	if err3 != nil {
+		_output_ := helper.APIResponse("Gagal Menghasilkan Token", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, _output_)
 		return
 	}
 
-	formatResponse := user.FormatUser(newUser, token)
-	response := helper.APIResponse("Akun Berhasil Didaftarkan", http.StatusOK, "sukses", formatResponse)
-	c.JSON(http.StatusOK, response)
+	var formatResponse = user.FormatUser(newUser, token)
+	var _output_ = helper.APIResponse("Akun Berhasil Didaftarkan", http.StatusOK, "sukses", formatResponse)
+	c.JSON(http.StatusOK, _output_)
 }
+
 
 func (h *userHandler) Login(c *gin.Context) {
 	var input user.LoginInput
 
-	err := c.ShouldBindJSON(&input)
+	var err = c.ShouldBindJSON(&input)
 	if err != nil {
-		errors := helper.FormatValidationError(err)
-		errorMessage := gin.H{"errors": errors}
-		response := helper.APIResponse("Gagal Mengkaitkan ke JSON", http.StatusBadRequest, "error", errorMessage)
-		c.JSON(http.StatusBadRequest, response)
+		var errors = helper.FormatValidationError(err)
+		var errorMessage = gin.H{"errors": errors}
+		var _output_ = helper.APIResponse("Gagal Mengkaitkan ke JSON", http.StatusBadRequest, "error", errorMessage)
+		c.JSON(http.StatusBadRequest, _output_)
 		return
 	}
 
-	LoginUser, err := h.userService.Login(input)
-	if err != nil {
-		errorMessage := gin.H{"errors": err.Error()}
-		response := helper.APIResponse("Gagal Login", http.StatusUnprocessableEntity, "error", errorMessage)
-		c.JSON(http.StatusUnprocessableEntity, response)
+	var LoginUser, err2 = h.userService.Login(input)
+	if err2 != nil {
+		var errorMessage = gin.H{"errors": err.Error()}
+		var _output_ = helper.APIResponse("Gagal Login", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, _output_)
 		return
 	}
 
-	token, err := h.authService.GenerateToken(LoginUser.ID, LoginUser.Name, LoginUser.Password)
-	if err != nil {
-		errorMessage := gin.H{"errors": err.Error()}
-		response := helper.APIResponse("Gagal Login", http.StatusUnprocessableEntity, "error", errorMessage)
-		c.JSON(http.StatusBadRequest, response)
+	var token, err3 = h.authService.GenerateToken(LoginUser.ID, LoginUser.Name, LoginUser.Password)
+	if err3 != nil {
+		var errorMessage = gin.H{"errors": err.Error()}
+		var _output_ = helper.APIResponse("Gagal Login", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusBadRequest, _output_)
 		return
 	}
 
-	formatResponse := user.FormatUser(LoginUser, token)
-	response := helper.APIResponse("User Berhasil Login ", http.StatusOK, "sukses", formatResponse)
-	c.JSON(http.StatusOK, response)
+	var formatResponse = user.FormatUser(LoginUser, token)
+	var _output_ = helper.APIResponse("User Berhasil Login ", http.StatusOK, "sukses", formatResponse)
+	c.JSON(http.StatusOK, _output_)
 }
 
 func (h *userHandler) CheckEmailAvailability(c *gin.Context) {
 	var input user.CheckEmailInput
 
-	err := c.ShouldBindJSON(&input)
+	var err = c.ShouldBindJSON(&input)
 	if err != nil {
-		errors := helper.FormatValidationError(err)
-		errorMessage := gin.H{"errors": errors}
-		response := helper.APIResponse("Gagal Mengkaitkan ke JSON", http.StatusBadRequest, "error", errorMessage)
-		c.JSON(http.StatusBadRequest, response)
+		var errors = helper.FormatValidationError(err)
+		var errorMessage = gin.H{"errors": errors}
+		var _output_ = helper.APIResponse("Gagal Mengkaitkan ke JSON", http.StatusBadRequest, "error", errorMessage)
+		c.JSON(http.StatusBadRequest, _output_)
 		return
 	}
 
-	isEmailAvaiable, err := h.userService.IsEmailAvailable(input)
-	if err != nil {
-		errorMessage := gin.H{"errors": "Server Error"}
-		response := helper.APIResponse("Pemeriksaan Email Gagal", http.StatusUnprocessableEntity, "error", errorMessage)
-		c.JSON(http.StatusUnprocessableEntity, response)
+	var isEmailAvaiable, err2 = h.userService.IsEmailAvailable(input)
+	if err2 != nil {
+		var errorMessage = gin.H{"errors": "Server Error"}
+		var _output_ = helper.APIResponse("Pemeriksaan Email Gagal", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, _output_)
 		return
 	}
 
-	data := gin.H{"is_available": isEmailAvaiable}
+	var data = gin.H{"is_available": isEmailAvaiable}
 
-	var metaMessage string = "Email Tersedia"
+	var metaMessage = "Email Tersedia"
 	if !isEmailAvaiable {
 		metaMessage = "Email Sudah Digunakan"
 	}
 
-	response := helper.APIResponse(metaMessage, http.StatusOK, "sukses", data)
-	c.JSON(http.StatusOK, response)
+	var _output_ = helper.APIResponse(metaMessage, http.StatusOK, "sukses", data)
+	c.JSON(http.StatusOK, _output_)
 }
