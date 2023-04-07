@@ -45,8 +45,8 @@ func main()  {
 	var todoHandler = handler.NewTodoHandler(todoService, authService)
 
 	
-	api.GET("/todo_list", todoHandler.GetTodos)
-	api.GET("/todo_list/:id", todoHandler.GetTodo)
+	api.GET("/todo_list", authMiddleware(authService, userService), todoHandler.GetTodos)
+	api.GET("/todo_list/:id", authMiddleware(authService, userService), todoHandler.GetTodo)
 	api.POST("/todo", authMiddleware(authService, userService), todoHandler.CreateTodo)
 	api.PUT("/todo/:id", authMiddleware(authService, userService), todoHandler.UpdateTodo)
 	api.DELETE("/todo/:id", authMiddleware(authService, userService), todoHandler.DeleteTodo)
@@ -99,7 +99,7 @@ func authMiddleware(authService auth.Service, userService user.Service) gin.Hand
 			return
 		}
 
-		c.Set("userAktif", user)
+		c.Set("who_is_logged_in", user)
 	}
 
 }

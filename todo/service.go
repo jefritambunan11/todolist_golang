@@ -2,15 +2,15 @@ package todo
 
 import (
 	"errors"
-	
 )
 
 type Service interface {
 	GetTodos(userID int, _page_number_ int) ([]Todo, error)
-	GetTodoByID(input GetTodoDetailInput) (Todo, error)
+	GetTodoByID(input GetTodoDetailInput, userID int) (Todo, error)
 	CreateTodo(input CreateTodoInput) (Todo, error)
 	UpdateTodo(inputID GetTodoDetailInput, inputData CreateTodoInput) (Todo, error)
 	DeleteTodo(inputID GetTodoDetailInput, inputData CreateTodoInput) (Todo, error)
+	GetNumberPaginationOfTotalTodo(userID int) (map[string]int64, error)
 }
 
 type service struct {
@@ -21,20 +21,21 @@ func NewService(repository Repository) *service {
 	return &service{repository}
 }
 
-func (s *service) GetTodos(userID int, _page_number_ int) ([]Todo, error) {
+func (s *service) GetTodos(userID int, page_number int) ([]Todo, error) {
 	
 	if userID != 0 {
-		var todos, err = s.repository.FindByUserID(userID)
+		var todos, err = s.repository.FindByUserID(userID, page_number)
 		
 		if err != nil {
 			return todos, err
 		}
 		
+		
 		return todos, nil
 	}
 	
 	
-	var todos, err = s.repository.FindAll(_page_number_)
+	var todos, err = s.repository.FindAll()
 	if err != nil {
 		return todos, err
 	}
@@ -43,15 +44,17 @@ func (s *service) GetTodos(userID int, _page_number_ int) ([]Todo, error) {
 	return todos, nil
 }
 
-func (s *service) GetTodoByID(input GetTodoDetailInput) (Todo, error) {
+
+func (s *service) GetTodoByID(input GetTodoDetailInput, userID int) (Todo, error) {
 	
-	var todo, err = s.repository.FindByID(input.ID)
+	var todo, err = s.repository.FindByID(input.ID, userID)
 	if err != nil {
 		return todo, err
 	}
 	
 	return todo, nil
 }
+
 
 func (s *service) CreateTodo(input CreateTodoInput) (Todo, error) {
 	
@@ -68,19 +71,19 @@ func (s *service) CreateTodo(input CreateTodoInput) (Todo, error) {
 	
 	
 	return newTodo, nil
-
 }
+
 
 func (s *service) UpdateTodo(inputID GetTodoDetailInput, inputData CreateTodoInput) (Todo, error) {
 	
-	var todo, err = s.repository.FindByID(inputID.ID)
+	var todo, err = s.repository.FindByID(inputID.ID, inputData.User.ID)
 	if err != nil {
 		return todo, err
 	}
 	
 	
 	if todo.UserID != inputData.User.ID {
-		return todo, errors.New("todo nya bukan milik si user")
+		return todo, errors.New("data todo nya bukan milik si user")
 	}
 	
 	
@@ -89,19 +92,18 @@ func (s *service) UpdateTodo(inputID GetTodoDetailInput, inputData CreateTodoInp
 	todo.DateTime = inputData.DateTime
 	
 	
-	updateTodo, err := s.repository.Update(todo)
-	if err != nil {
+	var updateTodo, err2 = s.repository.Update(todo)
+	if err2 != nil {
 		return updateTodo, err
 	}
-	
-	
+		
 	return updateTodo, nil
-
 }
+
 
 func (s *service) DeleteTodo(inputID GetTodoDetailInput, inputData CreateTodoInput) (Todo, error) {
 	
-	var todo, err = s.repository.FindByID(inputID.ID)
+	var todo, err = s.repository.FindByID(inputID.ID, inputData.User.ID)
 	if err != nil {
 		return todo, err
 	}
@@ -119,5 +121,31 @@ func (s *service) DeleteTodo(inputID GetTodoDetailInput, inputData CreateTodoInp
 	
 	
 	return deleteTodo, nil
-
 }
+
+
+
+func (s *service) GetNumberPaginationOfTotalTodo(userID int) (map[string]int64, error) {
+	
+	var total_data, err = s.repository.CountRowUserID(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	var pageSize int64 = 5  
+	
+	var numPages int64 = total_data / pageSize
+	
+	if total_data % pageSize != 0 {
+		numPages++
+	}
+
+	var data = make(map[string]int64)
+	data["number_of_pagination"] = numPages
+	data["total_data"] = total_data
+	
+	return data, nil
+}
+
+
+
