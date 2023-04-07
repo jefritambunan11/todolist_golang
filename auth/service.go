@@ -31,9 +31,7 @@ func (s *jwtService) GenerateToken(userID int, userName string, userPassword str
 
 	
 	var signedToken, err = token.SignedString(SECRET_KEY)
-	if err != nil {
-		return signedToken, err
-	}
+	if err != nil { return signedToken, err }
 	
 	return signedToken, nil
 }
@@ -44,18 +42,12 @@ func (s *jwtService) ValidateToken(encodedToken string) (*jwt.Token, error) {
 	var token, err = jwt.Parse(encodedToken, func(structToken *jwt.Token) (interface{}, error) {
 		_, ok := structToken.Method.(*jwt.SigningMethodHMAC)
 
-		if !ok {
-			return nil, errors.New("token tidak lazim")
-		}
+		if !ok { return nil, errors.New("token tidak lazim")  }
 
 		return []byte(SECRET_KEY), nil
 	})
-
 	
-	if err != nil {
-		return token, err
-	}
-
+	if err != nil { return token, err }
 	
 	return token, nil
 }
