@@ -40,12 +40,10 @@ func main()  {
 	router.Run(":8080")
 }
 
-
 func authMiddleware(authService auth.Service, userService user.Service) gin.HandlerFunc {
 	return func(c *gin.Context) {
-
 		var authHeader = c.GetHeader("Authorization")
-
+		
 		if !strings.Contains(authHeader, "Bearer") {
 			var _output_ = helper.APIResponse("Bentuk Token Salah ", http.StatusUnauthorized, "error", nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, _output_)
@@ -53,7 +51,6 @@ func authMiddleware(authService auth.Service, userService user.Service) gin.Hand
 		}
 
 		var tokenString = ""
-
 		var arrayToken = strings.Split(authHeader, " ")
 		if len(arrayToken) == 2 {
 			tokenString = arrayToken[1]
@@ -67,7 +64,6 @@ func authMiddleware(authService auth.Service, userService user.Service) gin.Hand
 		}
 
 		var claim, ok = _token_.Claims.(jwt.MapClaims)
-
 		if !ok || !_token_.Valid {
 			var _output_ = helper.APIResponse("Token Tidak Valid", http.StatusUnauthorized, "error", nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, _output_)
@@ -75,15 +71,12 @@ func authMiddleware(authService auth.Service, userService user.Service) gin.Hand
 		}
 
 		var userID = int(claim["user_id"].(float64))
-
 		var user, err2 = userService.GetUserByID(userID)
 		if err2 != nil {
 			var _output_ = helper.APIResponse("ID User Tidak Ditemukan", http.StatusUnauthorized, "error", nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, _output_)
 			return
 		}
-
 		c.Set("who_is_logged_in", user)
 	}
-
 }
