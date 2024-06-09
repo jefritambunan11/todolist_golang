@@ -40,6 +40,7 @@ func main()  {
 	router.Run(":8080")
 }
 
+
 func authMiddleware(authService auth.Service, userService user.Service) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
@@ -82,7 +83,7 @@ func authMiddleware(authService auth.Service, userService user.Service) gin.Hand
 			return
 		}
 
-		c.Set("userAktif", user)
+		c.Set("who_is_logged_in", user)
 	}
 
 }

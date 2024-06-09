@@ -8,7 +8,7 @@ type UserFormatter struct {
 	Token      string `json:"token"`
 }
 
-//token string
+
 func FormatUser(user User, token string) UserFormatter {
 
 	var formatter = UserFormatter {

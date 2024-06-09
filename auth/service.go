@@ -20,6 +20,7 @@ func NewService() *jwtService {
 var SECRET_KEY = []byte("Tfn#@j0lMq2vHte%*&")
 
 func (s *jwtService) GenerateToken(userID int, userName string, userPassword string) (string, error) {
+<<<<<<< HEAD
 	// TODO
 	// 1. pake struct jwt dan dimana field struct nya di set user_id, user_name, user_password dan  datanya berasal dari params
 	// 2. bagian ini enkrip struct claim dengan pola JWT dan return nya struct Token
@@ -27,11 +28,15 @@ func (s *jwtService) GenerateToken(userID int, userName string, userPassword str
 	// 4. bagian ini return hasil token akhir
 
 	// TODO 1
+=======
+	
+>>>>>>> 9ede165dd324e1863802b8cdb43c54dc29b7457e
 	var claim = jwt.MapClaims{}
 	claim["user_id"] = userID
 	claim["user_name"] = userName
 	claim["user_password"] = userPassword
 
+<<<<<<< HEAD
 	// TODO 2
 	var token = jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
 
@@ -42,10 +47,21 @@ func (s *jwtService) GenerateToken(userID int, userName string, userPassword str
 	}
 
 	// TODO 4
+=======
+	
+	var token = jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
+
+	
+	var signedToken, err = token.SignedString(SECRET_KEY)
+	if err != nil { return signedToken, err }
+	
+>>>>>>> 9ede165dd324e1863802b8cdb43c54dc29b7457e
 	return signedToken, nil
 }
 
+
 func (s *jwtService) ValidateToken(encodedToken string) (*jwt.Token, error) {
+<<<<<<< HEAD
 	// TODO
 	// 1. bagian ini memeriksa kode token, params 1 -> kode token, params 2 -> satu fungsi anonymous dan menggunakan 1 params struct Token dari package jwt
 	// 2. cek apakah saat proses terjemahkan ada error
@@ -68,5 +84,18 @@ func (s *jwtService) ValidateToken(encodedToken string) (*jwt.Token, error) {
 	}
 
 	// TODO 3
+=======
+	
+	var token, err = jwt.Parse(encodedToken, func(structToken *jwt.Token) (interface{}, error) {
+		_, ok := structToken.Method.(*jwt.SigningMethodHMAC)
+
+		if !ok { return nil, errors.New("token tidak lazim")  }
+
+		return []byte(SECRET_KEY), nil
+	})
+	
+	if err != nil { return token, err }
+	
+>>>>>>> 9ede165dd324e1863802b8cdb43c54dc29b7457e
 	return token, nil
 }

@@ -7,17 +7,11 @@ type TodoFormatter struct {
 	Todo     string    `json:"todo"`
 	DateTime time.Time `json:"date_time"`
 	UserID   int       `json:"user_id"`
-
-	User TodoUserFormatter `json:"user"`
 }
 
-type TodoUserFormatter struct {
-	ID    int    `json:"id"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
-}
 
 func FormatTodo(todo Todo) TodoFormatter {
+<<<<<<< HEAD
 	// TODO 
 	// 1. Pake struct TodoFormatter ke todoFormatter
 	// 2. set data field di struct dari struct todo
@@ -71,16 +65,50 @@ func FormatTodos(todos []Todo) []TodoFormatter {
 	// 3. 	
 	
 	// TODO 1
+=======
+	
+	var todoFormatter = TodoFormatter{}
+	
+	todoFormatter.ID = todo.ID
+	todoFormatter.Todo = todo.Todo
+	todoFormatter.DateTime = todo.DateTime
+	todoFormatter.UserID = todo.UserID	
+	
+	return todoFormatter
+}
+
+
+func FormatTodoDetail(todo Todo) TodoFormatter  {
+	
+	var todoFormatter = TodoFormatter{}	
+
+	todoFormatter.ID = todo.ID
+	todoFormatter.UserID = todo.UserID
+	todoFormatter.Todo = todo.Todo
+	todoFormatter.DateTime = todo.DateTime
+	
+	return todoFormatter	
+}
+
+
+func FormatTodos(todos []Todo) []TodoFormatter  {
+	
+>>>>>>> 9ede165dd324e1863802b8cdb43c54dc29b7457e
 	if len(todos) == 0 {
 		return []TodoFormatter{}
 	}
 	
+<<<<<<< HEAD
 	// TODO 2
 	var todosFormatter []TodoFormatter
 
 	// TODO 3
+=======
+	var todosFormatter []TodoFormatter
+	
+>>>>>>> 9ede165dd324e1863802b8cdb43c54dc29b7457e
 	for _, todo := range todos {
-		todoFormatter := FormatTodo(todo)
+		var todoFormatter = FormatTodo(todo)
 		todosFormatter = append(todosFormatter, todoFormatter)
 	}
 
