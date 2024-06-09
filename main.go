@@ -19,7 +19,7 @@ func main()  {
 	var router = gin.Default()
 	router.SetTrustedProxies(nil)
 	var api = router.Group("/api")
-	
+
 	var authService = auth.NewService()
 	var userRepository = user.NewRepository(db)
 	var userService = user.NewService(userRepository)
@@ -36,7 +36,7 @@ func main()  {
 	api.POST("/todo", authMiddleware(authService, userService), todoHandler.CreateTodo)
 	api.PUT("/todo/:id", authMiddleware(authService, userService), todoHandler.UpdateTodo)
 	api.DELETE("/todo/:id", authMiddleware(authService, userService), todoHandler.DeleteTodo)
-	
+
 	router.Run(":8080")
 }
 
