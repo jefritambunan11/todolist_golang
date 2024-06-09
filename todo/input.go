@@ -12,6 +12,5 @@ type GetTodoDetailInput struct {
 type CreateTodoInput struct {
 	Todo     string    `json:"todo" binding:"required"`
 	DateTime time.Time `json:"date_time" binding:"required"`
-
 	User user.User
 }

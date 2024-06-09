@@ -12,6 +12,5 @@ type Todo struct {
 	UserID    int
 	CreatedAt time.Time
 	UpdatedAt time.Time
-
 	User user.User
 }

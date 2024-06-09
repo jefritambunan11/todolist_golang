@@ -14,7 +14,6 @@ type userHandler struct {
 	authService auth.Service
 }
 
-//
 func NewUserHandler(userService user.Service, authService auth.Service) *userHandler {
 	return &userHandler{
 		userService,
@@ -52,7 +51,6 @@ func (h *userHandler) RegisterUser(c *gin.Context) {
 	var _output_ = helper.APIResponse("Akun Berhasil Didaftarkan", http.StatusOK, "sukses", formatResponse)
 	c.JSON(http.StatusOK, _output_)
 }
-
 
 func (h *userHandler) Login(c *gin.Context) {
 	var input user.LoginInput
