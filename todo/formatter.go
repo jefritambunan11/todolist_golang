@@ -9,7 +9,6 @@ type TodoFormatter struct {
 	UserID   int       `json:"user_id"`
 }
 
-
 func FormatTodo(todo Todo) TodoFormatter {
 	var todoFormatter = TodoFormatter{}
 	todoFormatter.ID = todo.ID
@@ -25,32 +24,10 @@ func FormatTodoDetail(todo Todo) TodoFormatter {
 	todoFormatter.UserID = todo.UserID
 	todoFormatter.Todo = todo.Todo
 	todoFormatter.DateTime = todo.DateTime
-
-	var todoUserFormatter = TodoUserFormatter{}
-	todoUserFormatter.ID = todo.User.ID
-	todoFormatter.User = todoUserFormatter
 	return todoFormatter
 }
 
 func FormatTodos(todos []Todo) []TodoFormatter {
-	var todoFormatter = TodoFormatter{}
-	todoFormatter.ID = todo.ID
-	todoFormatter.Todo = todo.Todo
-	todoFormatter.DateTime = todo.DateTime
-	todoFormatter.UserID = todo.UserID	
-	return todoFormatter
-}
-
-func FormatTodoDetail(todo Todo) TodoFormatter  {
-	var todoFormatter = TodoFormatter{}	
-	todoFormatter.ID = todo.ID
-	todoFormatter.UserID = todo.UserID
-	todoFormatter.Todo = todo.Todo
-	todoFormatter.DateTime = todo.DateTime
-	return todoFormatter	
-}
-
-func FormatTodos(todos []Todo) []TodoFormatter  {
 	if len(todos) == 0 {
 		return []TodoFormatter{}
 	}

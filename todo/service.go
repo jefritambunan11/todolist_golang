@@ -29,7 +29,6 @@ func (s *service) GetTodos(userID int) ([]Todo, error) {
 		}
 		return todos, nil
 	}
-	
 	var todos, err = s.repository.FindAll()
 	if err != nil {
 		return todos, err
@@ -50,7 +49,6 @@ func (s *service) CreateTodo(input CreateTodoInput) (Todo, error) {
 	todo.Todo = input.Todo
 	todo.DateTime = input.DateTime
 	todo.UserID = input.User.ID
-	
 	var newTodo, err = s.repository.Save(todo)
 	if err != nil {
 		return newTodo, err
@@ -69,7 +67,6 @@ func (s *service) UpdateTodo(inputID GetTodoDetailInput, inputData CreateTodoInp
 	todo.UserID = inputData.User.ID
 	todo.Todo = inputData.Todo
 	todo.DateTime = inputData.DateTime
-	
 	updateTodo, err := s.repository.Update(todo)
 	if err != nil {
 		return updateTodo, err
@@ -78,14 +75,13 @@ func (s *service) UpdateTodo(inputID GetTodoDetailInput, inputData CreateTodoInp
 }
 
 func (s *service) DeleteTodo(inputID GetTodoDetailInput, inputData CreateTodoInput) (Todo, error) {
-	var todo, err = s.repository.FindByID(inputID.ID)
+	var todo, err = s.repository.FindByID(inputID.ID, inputData.User.ID)
 	if err != nil {
 		return todo, err
 	}
 	if todo.UserID != inputData.User.ID {
 		return todo, errors.New("todo nya bukan milik si user")
 	}
-	
 	var deleteTodo, err2 = s.repository.Delete(todo)
 	if err2 != nil {
 		return deleteTodo, err
@@ -95,12 +91,12 @@ func (s *service) DeleteTodo(inputID GetTodoDetailInput, inputData CreateTodoInp
 
 func (s *service) GetNumberPaginationOfTotalTodo(userID int) (map[string]int64, error) {
 	var total_data, err = s.repository.CountRowUserID(userID)
-	if err != nil { 
-		return nil, err 
+	if err != nil {
+		return nil, err
 	}
-	var pageSize int64 = 5  
+	var pageSize int64 = 5
 	var numPages int64 = total_data / pageSize
-	if total_data % pageSize != 0 {
+	if total_data%pageSize != 0 {
 		numPages++
 	}
 	var data = make(map[string]int64)
@@ -108,6 +104,3 @@ func (s *service) GetNumberPaginationOfTotalTodo(userID int) (map[string]int64, 
 	data["total_data"] = total_data
 	return data, nil
 }
-
-
-

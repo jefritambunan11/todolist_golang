@@ -2,7 +2,6 @@ package user
 
 import (
 	"errors"
-
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -42,16 +41,13 @@ func (s *service) RegisterUser(input RegisterUserInput) (User, error) {
 func (s *service) Login(input LoginInput) (User, error) {
 	var email = input.Email
 	var password = input.Password
-
 	var user, err = s.repository.FindByEmail(email)
 	if err != nil {
 		return user, err
 	}
-
 	if user.ID == 0 {
 		return user, errors.New("User Tidak Ditemukan")
 	}
-
 	var _err_ = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if _err_ != nil {
 		return user, errors.New("Password Salah")
