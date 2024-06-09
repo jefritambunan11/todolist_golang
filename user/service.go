@@ -26,26 +26,26 @@ func (s *service) RegisterUser(input RegisterUserInput) (User, error) {
 	user.Name = input.Name
 	user.Email = input.Email
 
-	passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
+	var passwordHash, err = bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
 	if err != nil {
 		return user, err
 	}
 
 	user.Password = string(passwordHash)
 
-	newUser, err := s.repository.Save(user)
-	if err != nil {
-		return newUser, err
+	var newUser, err2 = s.repository.Save(user)
+	if err2 != nil {
+		return newUser, err2
 	}
 
 	return newUser, nil
 }
 
 func (s *service) Login(input LoginInput) (User, error) {
-	email := input.Email
-	password := input.Password
+	var email = input.Email
+	var password = input.Password
 
-	user, err := s.repository.FindByEmail(email)
+	var user, err = s.repository.FindByEmail(email)
 	if err != nil {
 		return user, err
 	}
@@ -54,7 +54,7 @@ func (s *service) Login(input LoginInput) (User, error) {
 		return user, errors.New("User Tidak Ditemukan")
 	}
 
-	_err_ := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	var _err_ = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if _err_ != nil {
 		return user, errors.New("Password Salah")
 	}
@@ -63,9 +63,9 @@ func (s *service) Login(input LoginInput) (User, error) {
 }
 
 func (s *service) IsEmailAvailable(input CheckEmailInput) (bool, error) {
-	email := input.Email
+	var email = input.Email
 
-	user, err := s.repository.FindByEmail(email)
+	var user, err = s.repository.FindByEmail(email)
 	if err != nil {
 		return false, err
 	}
@@ -78,12 +78,15 @@ func (s *service) IsEmailAvailable(input CheckEmailInput) (bool, error) {
 }
 
 func (s *service) GetUserByID(id int) (User, error) {
-	user, err := s.repository.FindByID(id)
+	var user, err = s.repository.FindByID(id)
+	
 	if err != nil {
 		return user, err
 	}
+	
 	if user.ID == 0 {
 		return user, errors.New("Tidak Ada User Menggunakan ID Tersebut")
 	}
+
 	return user, nil
 }

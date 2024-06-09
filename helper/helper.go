@@ -16,13 +16,13 @@ type Meta struct {
 }
 
 func APIResponse(message string, code int, status string, data interface{}) Response {
-	meta := Meta{
+	var meta = Meta {
 		Message: message,
 		Code:    code,
 		Status:  status,
 	}
 
-	response := Response{
+	var response = Response {
 		Meta: meta,
 		Data: data,
 	}

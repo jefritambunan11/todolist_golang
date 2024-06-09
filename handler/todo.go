@@ -26,31 +26,45 @@ func NewTodoHandler(todoService todo.Service, authService auth.Service) *todoHan
 }
 
 func (h *todoHandler) GetTodos(c *gin.Context) {
+	// TODO
+	// 1. konversi nilai dari params user_id
+	// 2. ambil data list todo dari method GetTodos
+	// 3. Return data todo ke bentuk JSON
+	
+	// TODO 1
 	userID, _ := strconv.Atoi(c.Query("user_id"))
-
+	
+	// TODO 2
 	todos, err := h.todoService.GetTodos(userID)
-
 	if err != nil {
 		response := helper.APIResponse("Gagal Mengambil Data Todos", http.StatusBadRequest, "error", err)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-
+	
+	// TODO 3
 	response := helper.APIResponse("Daftar Todos", http.StatusOK, "sukses", todo.FormatTodos(todos))
 	c.JSON(http.StatusOK, response)
 
 }
 
 func (h *todoHandler) GetTodo(c *gin.Context) {
+	// TODO 
+	// 1. akses struct GetTodoDetailInput di package todo
+	// 2. mengcocokan json data dengan struct GetTodoDetailInput 
+	
+	// TODO 1
 	var input todo.GetTodoDetailInput
 
+	// TODO 2
 	err := c.ShouldBindUri(&input)
 	if err != nil {
 		response := helper.APIResponse("Gagal Mengkaitkan ke JSON ", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-
+	
+	// TODO 3
 	todoDetail, err := h.todoService.GetTodoByID(input)
 	if err != nil {
 		response := helper.APIResponse("Transaksi Database Gagal", http.StatusBadRequest, "error", nil)
