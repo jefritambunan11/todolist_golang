@@ -43,7 +43,6 @@ func main()  {
 func authMiddleware(authService auth.Service, userService user.Service) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var authHeader = c.GetHeader("Authorization")
-		
 		if !strings.Contains(authHeader, "Bearer") {
 			var _output_ = helper.APIResponse("Bentuk Token Salah ", http.StatusUnauthorized, "error", nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, _output_)
