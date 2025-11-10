@@ -37,7 +37,7 @@ func main()  {
 	api.PUT("/todo/:id", authMiddleware(authService, userService), todoHandler.UpdateTodo)
 	api.DELETE("/todo/:id", authMiddleware(authService, userService), todoHandler.DeleteTodo)
 
-	router.Run(":9999")
+	router.Run(":8080")
 }
 
 func authMiddleware(authService auth.Service, userService user.Service) gin.HandlerFunc {
