@@ -32,7 +32,7 @@ func (r *repository) FindAll() ([]Todo, error) {
 	return todos, nil
 }
 
-func (r *repository) FindByUserID(UserID int) ([]Todo, error) {
+func (r *repository) FindByUserID(UserID int, page_number int) ([]Todo, error) {
 	var todos []Todo
 	var err = r.db.Preload("User").Where("user_id = ?", UserID).Find(&todos).Error
 	if err != nil {
@@ -41,7 +41,7 @@ func (r *repository) FindByUserID(UserID int) ([]Todo, error) {
 	return todos, nil
 }
 
-func (r *repository) FindByID(ID int) (Todo, error) {	
+func (r *repository) FindByID(ID int, UserID int) (Todo, error) {	
 	var todo Todo
 	var err = r.db.Preload("User").Where("id = ?", ID).Find(&todo).Error
 	if err != nil {

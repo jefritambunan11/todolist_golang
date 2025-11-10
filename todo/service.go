@@ -21,9 +21,9 @@ func NewService(repository Repository) *service {
 	return &service{repository}
 }
 
-func (s *service) GetTodos(userID int) ([]Todo, error) {
+func (s *service) GetTodos(userID int, _page_number_ int) ([]Todo, error) {
 	if userID != 0 {
-		var todos, err = s.repository.FindByUserID(userID)
+		var todos, err = s.repository.FindByUserID(userID, _page_number_)
 		if err != nil {
 			return todos, err
 		}
@@ -36,8 +36,8 @@ func (s *service) GetTodos(userID int) ([]Todo, error) {
 	return todos, nil
 }
 
-func (s *service) GetTodoByID(input GetTodoDetailInput) (Todo, error) {
-	var todo, err = s.repository.FindByID(input.ID)
+func (s *service) GetTodoByID(input GetTodoDetailInput, userID int) (Todo, error) {
+	var todo, err = s.repository.FindByID(input.ID, userID)
 	if err != nil {
 		return todo, err
 	}
@@ -57,7 +57,7 @@ func (s *service) CreateTodo(input CreateTodoInput) (Todo, error) {
 }
 
 func (s *service) UpdateTodo(inputID GetTodoDetailInput, inputData CreateTodoInput) (Todo, error) {
-	var todo, err = s.repository.FindByID(inputID.ID)
+	var todo, err = s.repository.FindByID(inputID.ID, inputData.User.ID)
 	if err != nil {
 		return todo, err
 	}

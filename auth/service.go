@@ -41,9 +41,8 @@ func (s *jwtService) ValidateToken(encodedToken string) (*jwt.Token, error) {
 	})
 	if err != nil {
 		return token, err
-	}
-	
-	var token, err = jwt.Parse(encodedToken, func(structToken *jwt.Token) (interface{}, error) {
+	}	
+	token, err = jwt.Parse(encodedToken, func(structToken *jwt.Token) (interface{}, error) {
 		_, ok := structToken.Method.(*jwt.SigningMethodHMAC)
 		if !ok { 
 			return nil, errors.New("token tidak lazim")  
