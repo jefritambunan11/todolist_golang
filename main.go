@@ -16,6 +16,9 @@ import (
 
 func main()  {
 	var db = database.Connect()
+	db.SetMaxIdleConns(10)
+	db.SetMaxOpenConns(100)
+	db.SetConnMaxLifetime(time.Hour)
 	var router = gin.Default()
 	router.SetTrustedProxies(nil)
 	var api = router.Group("/api")
